@@ -165,10 +165,6 @@ fn parse_xml_node<'input>(
     doc: &mut Document<'input>,
     id_map: &HashMap<&str, roxmltree::Node<'_, 'input>>,
 ) -> Result<(), Error> {
-    if depth > 1024 {
-        return Err(Error::NodesLimitReached);
-    }
-
     let mut tag_name = match parse_tag_name(node) {
         Some(id) => id,
         None => return Ok(()),
@@ -334,10 +330,6 @@ pub(crate) fn parse_svg_element<'input>(
         for declaration in simplecss::DeclarationTokenizer::from(value) {
             write_declaration(&declaration);
         }
-    }
-
-    if doc.nodes.len() > 1_000_000 {
-        return Err(Error::NodesLimitReached);
     }
 
     let node_id = doc.append(
